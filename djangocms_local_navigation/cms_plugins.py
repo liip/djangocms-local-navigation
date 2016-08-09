@@ -1,15 +1,15 @@
 from bs4 import BeautifulSoup
-
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.templatetags.cms_tags import get_placeholder_content
+from django.utils.translation import ugettext_lazy as _
 
 from .conf import settings
 
 
 class LocalNavigationPlugin(CMSPluginBase):
-    module = "Local navigation"
-    name = "Local menu"
+    module = _("Local navigation")
+    name = _("Local menu")
     render_template = "djangocms_local_navigation/menu.html"
 
     def render(self, context, instance, placeholder):
