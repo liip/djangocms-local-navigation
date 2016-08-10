@@ -98,3 +98,23 @@ class LocalNavigationFunctionalTestCase(TestCase):
 
         response = self.client.get('/en/')
         self.assertElementsAreUnique('a', 'href', response.content)
+
+    def test_patched_elements_have_class_set(self):
+        self.add_text('<h2>Hello</h2>')
+
+        response = self.client.get('/en/')
+        soup = BeautifulSoup(response.content)
+        heading = soup.find_all('h2')
+        self.assertEqual(len(heading), 1)
+        self.assertEqual(heading[0]['class'], ['local-navigation-item'])
+
+    def test_patched_elements_with_existing_class_get_class_appended(self):
+        self.add_text('<h2 class="hello">Hello</h2>')
+
+        response = self.client.get('/en/')
+        soup = BeautifulSoup(response.content)
+        heading = soup.find_all('h2')
+        self.assertEqual(len(heading), 1)
+        self.assertEqual(
+            heading[0]['class'], ['hello', 'local-navigation-item']
+        )

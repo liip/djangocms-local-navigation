@@ -9,13 +9,19 @@ from djangocms_text_ckeditor.models import Text
 from .conf import settings
 
 
-def add_ids_to_content(instance, placeholder, rendered_content,
-                       original_context):
+def patch_elements(instance, placeholder, rendered_content, original_context):
     # Only patch Text plugins output
     if not isinstance(instance, Text):
         return rendered_content
 
-    text = add_ids(rendered_content, settings.NAV_ELEMENTS, instance.id)
+    soup = BeautifulSoup(rendered_content, settings.XML_PARSER)
+    elements = soup.find_all(settings.NAV_ELEMENTS)
+    add_ids(elements, instance.id)
+    if settings.NAV_ELEMENTS_CLASS:
+        add_class(elements, settings.NAV_ELEMENTS_CLASS)
+
+    if soup.body:
+        text = ''.join(six.text_type(t) for t in soup.body)
 
     # Depending on whether the original rendered_content was marked as safe,
     # return a safe string
@@ -25,7 +31,12 @@ def add_ids_to_content(instance, placeholder, rendered_content,
         return text
 
 
-def add_ids(text, tags, prefix=''):
+def add_class(elements, class_name):
+    for element in elements:
+        element['class'] = element.get('class', []) + [class_name]
+
+
+def add_ids(elements, prefix=''):
     """
     Add an HTML id attribute to the given list of tags. `text` is the input
     HTML that will be parsed to search for `tags`. The content of the id
@@ -48,16 +59,14 @@ def add_ids(text, tags, prefix=''):
     >>> add_ids('<h2>Hello</h2><p>Hello</p>', ['h2', 'p'], '99')
     '<h2 id="hello-99">Hello</h2><p id="hello-99-1">Hello</p>'
     """
-    soup = BeautifulSoup(text, settings.XML_PARSER)
-    headings = soup.find_all(tags)
     existing_slugs = defaultdict(int)
 
-    for heading in headings:
-        slug = slugify(heading.string)
+    for element in elements:
+        slug = slugify(element.string)
 
         # Only set the id if there's not already an id
-        if 'id' not in heading.attrs:
-            heading['id'] = '{slug}{prefix}{suffix}'.format(
+        if 'id' not in element.attrs:
+            element['id'] = '{slug}{prefix}{suffix}'.format(
                 slug=slug,
                 prefix='-{}'.format(prefix) if prefix else '',
                 suffix='-{}'.format(existing_slugs[slug]) if slug in existing_slugs else ''
@@ -65,7 +74,4 @@ def add_ids(text, tags, prefix=''):
 
         existing_slugs[slug] += 1
 
-    if soup.body:
-        return ''.join(six.text_type(t) for t in soup.body)
-    else:
-        return text
+    return elements

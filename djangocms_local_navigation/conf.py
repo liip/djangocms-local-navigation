@@ -9,6 +9,8 @@ class Settings:
         # https://www.crummy.com/software/BeautifulSoup/bs4/doc/#specifying-the-parser-to-use
         # for more info. `None` means automatic detection.
         'XML_PARSER': None,
+        'SET_ATTRS': {},
+        'NAV_ELEMENTS_CLASS': 'local-navigation-item',
     }
 
     def __getattr__(self, name):

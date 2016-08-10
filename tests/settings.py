@@ -65,5 +65,5 @@ CMS_TEMPLATES = (
 )
 
 CMS_PLUGIN_PROCESSORS = (
-    'djangocms_local_navigation.cms_plugin_processors.add_ids_to_content',
+    'djangocms_local_navigation.cms_plugin_processors.patch_elements',
 )
