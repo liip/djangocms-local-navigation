@@ -22,6 +22,8 @@ def patch_elements(instance, placeholder, rendered_content, original_context):
 
     if soup.body:
         text = ''.join(six.text_type(t) for t in soup.body)
+    else:
+        text = soup.contents
 
     # Depending on whether the original rendered_content was marked as safe,
     # return a safe string
