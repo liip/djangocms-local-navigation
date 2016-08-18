@@ -1,10 +1,9 @@
-from bs4 import BeautifulSoup
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cms.templatetags.cms_tags import get_placeholder_content
 from django.utils.translation import ugettext_lazy as _
 
-from .conf import settings
+from .utils import get_nav_elements, get_soup
 
 
 class LocalNavigationPlugin(CMSPluginBase):
@@ -24,8 +23,7 @@ class LocalNavigationPlugin(CMSPluginBase):
             context, context['request'], context['current_page'], placeholder,
             inherit=False, default=''
         )
-        placeholder_soup = BeautifulSoup(placeholder_text, settings.XML_PARSER)
-        headings = placeholder_soup.find_all(settings.NAV_ELEMENTS)
+        headings = get_nav_elements(get_soup(placeholder_text))
 
         menu_items = [
             (heading.text, '#' + heading['id'])

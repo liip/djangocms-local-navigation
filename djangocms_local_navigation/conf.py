@@ -4,7 +4,7 @@ from django.conf import settings as django_settings
 class Settings:
     SETTINGS = {
         # Tags to use for navigation
-        'NAV_ELEMENTS': ['h2'],
+        'NAV_ELEMENTS': 'h2',
         # XML parser to use, see
         # https://www.crummy.com/software/BeautifulSoup/bs4/doc/#specifying-the-parser-to-use
         # for more info. `None` means automatic detection.
