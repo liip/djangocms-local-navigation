@@ -68,7 +68,7 @@ class LocalNavigationFunctionalTestCase(TestCase):
         response = self.client.get('/en/')
         self.assertHeadingWithIdExists('hello-', response.content)
 
-    @override_settings(CMS_LOCAL_NAVIGATION_NAV_ELEMENTS=['h1'])
+    @override_settings(CMS_LOCAL_NAVIGATION_NAV_ELEMENTS='h1')
     def test_nav_elements_setting_adds_ids_to_elements_set(self):
         self.add_text('<h1>Hello</h1><p>world</p>')
 
