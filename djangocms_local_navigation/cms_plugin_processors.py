@@ -3,17 +3,12 @@ from collections import defaultdict
 from django.utils import six
 from django.utils.safestring import mark_safe, SafeText
 from django.utils.text import slugify
-from djangocms_text_ckeditor.models import Text
 
 from .conf import settings
 from .utils import get_nav_elements, get_soup
 
 
 def patch_elements(instance, placeholder, rendered_content, original_context):
-    # Only patch Text plugins output
-    if not isinstance(instance, Text):
-        return rendered_content
-
     soup = get_soup(rendered_content)
     elements = get_nav_elements(soup)
     add_ids(elements, instance.id)
