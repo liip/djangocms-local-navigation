@@ -50,6 +50,6 @@ for more information. Be advised that [lxml has known issues with
 mod_python](http://lxml.de/FAQ.html#my-program-crashes-when-run-with-mod-python-pyro-zope-plone)
 and can cause your processes to hang.
 
-## Dependencies
+## Development
 
-* djangocms-text-ckeditor
+To run the tests, use `./setup.py test`.
