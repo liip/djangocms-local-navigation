@@ -1,0 +1,6 @@
+{
+    "package-name": "djangocms-local-navigation",
+    "installed-apps": [
+        "djangocms_local_navigation"
+    ]
+}
