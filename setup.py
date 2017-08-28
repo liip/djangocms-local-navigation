@@ -43,7 +43,8 @@ setup(
     packages=['djangocms_local_navigation'],
     author='Sylvain Fankhauser',
     author_email='sylvain.fankhauser@liip.ch',
-    description=open('README.md').read(),
+    description="Display menus based on the HTML structure of the pages"
+    long_description=open('README.md').read(),
     url='https://github.com/liip/djangocms-local-navigation',
     install_requires=install_requires,
     tests_require=tests_require,
