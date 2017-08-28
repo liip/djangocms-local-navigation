@@ -1,6 +1,11 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
-from cms.templatetags.cms_tags import get_placeholder_content
+
+try:
+    from cms.templatetags.cms_tags import get_placeholder_content
+except ImportError:
+    get_placeholder_content = None
+
 from django.utils.translation import ugettext_lazy as _
 
 from .utils import get_nav_elements, get_soup
@@ -19,11 +24,22 @@ class LocalNavigationPlugin(CMSPluginBase):
         else:
             context['_local_navigation_rendering'] = True
 
-        placeholder_text = get_placeholder_content(
-            context, context['request'], context['current_page'], placeholder,
-            inherit=False, default=''
-        )
-        headings = get_nav_elements(get_soup(placeholder_text))
+        if get_placeholder_content:
+            content = get_placeholder_content(
+                context, context['request'], context['current_page'], placeholder,
+                inherit=False, default=''
+            )
+        else:
+            content_renderer = context.get('cms_content_renderer')
+
+            if not content_renderer:
+                return context
+
+            content = content_renderer.render_page_placeholder(
+                slot=placeholder, context=context, inherit=False, nodelist=None
+            )
+
+        headings = get_nav_elements(get_soup(content))
 
         menu_items = [
             (heading.text, '#' + heading['id'])
